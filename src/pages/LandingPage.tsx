@@ -92,23 +92,26 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background font-sans">
       {/* Navbar */}
-      <nav className="fixed top-0 inset-x-0 z-50 glass border-b border-border/50">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
+      <nav className="fixed top-0 inset-x-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
             <div className="w-8 h-8 rounded-xl gradient-hero flex items-center justify-center shadow-primary">
               <span className="text-white font-bold text-sm">S</span>
             </div>
-            <span className="font-bold text-lg tracking-tight">SubSave</span>
+            <span className="font-bold text-lg tracking-tight text-foreground">SubSave</span>
           </Link>
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
+          <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-muted-foreground">
             <a href="#features" className="hover:text-foreground transition-colors">Features</a>
             <a href="#how-it-works" className="hover:text-foreground transition-colors">How it Works</a>
             <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
             <Link to="/founder" className="hover:text-foreground transition-colors">Founder</Link>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <Link to="/login">
-              <Button variant="ghost" size="sm" className="font-medium">Log in</Button>
+              <Button variant="outline" size="sm" className="font-medium hidden sm:inline-flex">Log in</Button>
+            </Link>
+            <Link to="/login" className="sm:hidden">
+              <Button variant="ghost" size="sm" className="font-medium text-foreground">Log in</Button>
             </Link>
             <Link to="/register">
               <Button size="sm" className="font-medium shadow-primary">Get Started Free</Button>
