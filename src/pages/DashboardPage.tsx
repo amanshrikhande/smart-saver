@@ -59,12 +59,12 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8">
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Good morning, Rahul 👋</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Good morning, Rahul 👋</h1>
+          <p className="text-muted-foreground mt-1 text-sm">
             {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
         </div>
@@ -76,11 +76,11 @@ export default function DashboardPage() {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
         {cards.map(card => (
-          <div key={card.label} className="stat-card animate-fade-in">
-            <div className="flex items-start justify-between mb-4">
-              <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center', card.bg)}>
+          <div key={card.label} className="stat-card">
+            <div className="flex items-start justify-between mb-3 sm:mb-4">
+              <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0', card.bg)}>
                 <card.icon className={cn('w-5 h-5', card.color)} />
               </div>
               {card.up !== null && (
@@ -100,25 +100,25 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts + Upcoming */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
         {/* Spending trend */}
         <div className="lg:col-span-2 stat-card">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
             <div>
               <h2 className="font-semibold">Monthly Spending Trend</h2>
               <p className="text-sm text-muted-foreground">Last 7 months in ₹</p>
             </div>
             <span className="badge-status-active">Live data</span>
           </div>
-          <ResponsiveContainer width="100%" height={220}>
-            <LineChart data={mockMonthlySpend}>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={mockMonthlySpend} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="month" tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false}
-                tickFormatter={v => `₹${(v / 1000).toFixed(0)}k`} />
+              <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false}
+                tickFormatter={v => `₹${(v / 1000).toFixed(0)}k`} width={45} />
               <Tooltip
                 formatter={(v: number) => [formatINR(v), 'Spend']}
-                contentStyle={{ borderRadius: '12px', border: '1px solid hsl(var(--border))', background: 'hsl(var(--card))' }}
+                contentStyle={{ borderRadius: '12px', border: '1px solid hsl(var(--border))', background: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }}
               />
               <Line type="monotone" dataKey="amount" stroke="hsl(var(--primary))" strokeWidth={2.5}
                 dot={{ fill: 'hsl(var(--primary))', r: 4 }} activeDot={{ r: 6 }} />
