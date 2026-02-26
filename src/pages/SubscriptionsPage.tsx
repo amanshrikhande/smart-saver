@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, Grid3X3, List, Calendar as CalIcon, X, Trash2, Edit2, ExternalLink, TrendingUp } from 'lucide-react';
+import { Plus, Search, Grid3X3, List, Calendar as CalIcon, Trash2 } from 'lucide-react';
 import { initialSubscriptions, formatINR, Subscription, CATEGORY_COLORS } from '@/data/subscriptions';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -40,29 +40,46 @@ export default function SubscriptionsPage() {
   const totalMonthly = filtered.reduce((acc, s) => acc + s.monthlyCost, 0);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-5 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">My Subscriptions</h1>
-          <p className="text-muted-foreground mt-1">{filtered.length} active · {formatINR(totalMonthly)}/mo total</p>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">My Subscriptions</h1>
+          <p className="text-muted-foreground mt-1 text-sm">{filtered.length} active · {formatINR(totalMonthly)}/mo total</p>
         </div>
-        <Button onClick={() => setShowAdd(true)} className="gap-2 shadow-primary flex-shrink-0">
+        <Button onClick={() => setShowAdd(true)} className="gap-2 shadow-primary flex-shrink-0 min-h-[44px]">
           <Plus className="w-4 h-4" />
-          Add Subscription
+          <span className="hidden sm:inline">Add Subscription</span>
+          <span className="sm:hidden">Add</span>
         </Button>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search subscriptions..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="pl-10"
-          />
+      <div className="flex flex-col gap-3">
+        <div className="flex gap-3 items-center">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search subscriptions..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="pl-10 min-h-[44px]"
+            />
+          </div>
+          <div className="flex items-center gap-1 border border-border rounded-lg p-1 bg-card flex-shrink-0">
+            <button
+              onClick={() => setView('grid')}
+              className={cn('p-2 rounded-md transition-all min-w-[36px] min-h-[36px] flex items-center justify-center', view === 'grid' ? 'bg-secondary shadow-card' : 'text-muted-foreground hover:text-foreground')}
+            >
+              <Grid3X3 className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setView('list')}
+              className={cn('p-2 rounded-md transition-all min-w-[36px] min-h-[36px] flex items-center justify-center', view === 'list' ? 'bg-secondary shadow-card' : 'text-muted-foreground hover:text-foreground')}
+            >
+              <List className="w-4 h-4" />
+            </button>
+          </div>
         </div>
         <div className="flex gap-2 flex-wrap">
           {categories.map(cat => (
@@ -70,7 +87,7 @@ export default function SubscriptionsPage() {
               key={cat}
               onClick={() => setCategoryFilter(cat)}
               className={cn(
-                'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
+                'px-3 py-2 rounded-lg text-sm font-medium transition-all min-h-[36px]',
                 categoryFilter === cat
                   ? 'bg-primary text-primary-foreground shadow-primary'
                   : 'bg-secondary text-muted-foreground hover:text-foreground'
@@ -80,25 +97,11 @@ export default function SubscriptionsPage() {
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-1 border border-border rounded-lg p-1 bg-card ml-auto">
-          <button
-            onClick={() => setView('grid')}
-            className={cn('p-1.5 rounded-md transition-all', view === 'grid' ? 'bg-secondary shadow-card' : 'text-muted-foreground hover:text-foreground')}
-          >
-            <Grid3X3 className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setView('list')}
-            className={cn('p-1.5 rounded-md transition-all', view === 'list' ? 'bg-secondary shadow-card' : 'text-muted-foreground hover:text-foreground')}
-          >
-            <List className="w-4 h-4" />
-          </button>
-        </div>
       </div>
 
       {/* Grid View */}
       {view === 'grid' && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {filtered.map(sub => (
             <SubCard
               key={sub.id}
@@ -108,7 +111,7 @@ export default function SubscriptionsPage() {
             />
           ))}
           {filtered.length === 0 && (
-            <div className="col-span-3 text-center py-16 text-muted-foreground">
+            <div className="col-span-full text-center py-16 text-muted-foreground">
               <CalIcon className="w-10 h-10 mx-auto mb-3 opacity-40" />
               <p>No subscriptions found</p>
             </div>
@@ -118,11 +121,11 @@ export default function SubscriptionsPage() {
 
       {/* List View */}
       {view === 'list' && (
-        <div className="stat-card p-0 overflow-hidden">
-          <table className="w-full">
+        <div className="stat-card p-0 overflow-hidden overflow-x-auto">
+          <table className="w-full min-w-[380px]">
             <thead>
               <tr className="border-b border-border bg-secondary/30">
-                <th className="text-left px-5 py-3.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Service</th>
+                <th className="text-left px-4 sm:px-5 py-3.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Service</th>
                 <th className="text-left px-4 py-3.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden md:table-cell">Category</th>
                 <th className="text-left px-4 py-3.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Cost</th>
                 <th className="text-left px-4 py-3.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden sm:table-cell">Next Renewal</th>
@@ -137,13 +140,13 @@ export default function SubscriptionsPage() {
                   className={cn('hover:bg-secondary/30 transition-colors cursor-pointer', i !== filtered.length - 1 && 'border-b border-border')}
                   onClick={() => setDetailTarget(sub)}
                 >
-                  <td className="px-5 py-4">
+                  <td className="px-4 sm:px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0" style={{ background: sub.color + '20' }}>
                         {sub.emoji}
                       </div>
-                      <div>
-                        <div className="text-sm font-medium">{sub.name}</div>
+                      <div className="min-w-0">
+                        <div className="text-sm font-medium truncate">{sub.name}</div>
                         <div className="text-xs text-muted-foreground">{sub.billingCycle}</div>
                       </div>
                     </div>
@@ -169,7 +172,7 @@ export default function SubscriptionsPage() {
                   <td className="px-4 py-4 text-right">
                     <button
                       onClick={e => { e.stopPropagation(); setCancelTarget(sub); }}
-                      className="text-muted-foreground hover:text-destructive transition-colors p-1"
+                      className="text-muted-foreground hover:text-destructive transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -195,7 +198,7 @@ function SubCard({ sub, onDetail, onCancel }: { sub: Subscription; onDetail: (s:
 
   return (
     <div
-      className="stat-card cursor-pointer hover:shadow-elevated group"
+      className="stat-card cursor-pointer hover:shadow-elevated group active:scale-[0.99] transition-transform"
       onClick={() => onDetail(sub)}
     >
       <div className="flex items-start justify-between mb-4">
@@ -209,7 +212,7 @@ function SubCard({ sub, onDetail, onCancel }: { sub: Subscription; onDetail: (s:
         </span>
       </div>
 
-      <h3 className="font-semibold text-base mb-1">{sub.name}</h3>
+      <h3 className="font-semibold text-base mb-1 truncate">{sub.name}</h3>
       <p className="text-xs text-muted-foreground mb-3">{sub.category} · {sub.billingCycle}</p>
 
       <div className="flex items-end justify-between mb-4">
@@ -231,10 +234,10 @@ function SubCard({ sub, onDetail, onCancel }: { sub: Subscription; onDetail: (s:
         </div>
         <button
           onClick={e => { e.stopPropagation(); onCancel(sub); }}
-          className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all text-xs flex items-center gap-1"
+          className="sm:opacity-0 sm:group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all text-xs flex items-center gap-1 p-1 min-h-[36px]"
         >
           <Trash2 className="w-3.5 h-3.5" />
-          Cancel
+          <span className="sm:hidden">Cancel</span>
         </button>
       </div>
     </div>
